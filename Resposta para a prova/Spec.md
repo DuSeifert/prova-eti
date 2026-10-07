@@ -114,3 +114,13 @@ Aplicada no encerramento, pela regra de cobrança. Valores esperados com a varia
 | 8.2 | Abrir após encerrar o bilhete anterior da placa | 201 com novo `id` |
 | 8.3 | Abrir após cancelar o bilhete anterior da placa | 201 com novo `id` |
 | 8.4 | Placas diferentes | independentes; podem ter bilhetes abertos ao mesmo tempo |
+
+## Requisitos não funcionais
+| # | Critério |
+| --- | --- |
+| N1 | Serviço escuta na porta 8003 e responde após a subida sem passos manuais |
+| N2 | Todas as respostas são JSON, inclusive erros |
+| N3 | Nenhuma entrada inválida resulta em status 500 |
+| N4 | Nenhum erro altera o estado do sistema |
+| N5 | Nenhum campo `valor`, nem número com ponto decimal, em qualquer resposta |
+ 
