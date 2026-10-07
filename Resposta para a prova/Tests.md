@@ -27,9 +27,6 @@ fração 15 min, teto 8000, tolerância 15 min, porta 8003. `VALOR_FRACAO_CENTAV
 | C12 | 61 | 625 | +1 min depois da hora |
 | C13 | 120 | 1000 | duas horas |
  
-> [!NOTE]
-> A tolerância **não** é descontada: 16 min cobra 2 frações (250), não 1 (125).
- 
 ## 2. Teto diário
  
 > [!WARNING]
