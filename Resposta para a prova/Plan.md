@@ -8,6 +8,7 @@ convenções transversais em `constitution.md`.
   `TestClient` (requer `httpx`) testa a API sem subir servidor.
 - Python 3.11+ porque `datetime.fromisoformat` aceita ISO-8601 com fuso e o sufixo `Z`.
 - Fixar as versões instaladas em `requirements.txt` (`fastapi`, `uvicorn`, `pytest`, `httpx`).
+- Execução e testes dentro de container Docker (ver D10).
 ## D2. Estrutura de arquivos
 ```text
 app/
@@ -21,6 +22,9 @@ tests/
   conftest.py    # fixtures: cliente, estado limpo, relógio
   test_*.py
 requirements.txt
+Dockerfile
+.dockerignore
+README.md
 ```
 - **Por quê:** `cobranca.py` com funções puras permite testar fração, teto e média
   sem HTTP; `config.py` e `relogio.py` garantem as regras de fonte única da constitution.
@@ -42,9 +46,12 @@ requirements.txt
 - Parse de `entrada` com `datetime.fromisoformat`; **rejeitar** se `tzinfo` for
   `None` ou se o valor não for string. Converter para `-03:00` e descartar microssegundos.
 - Serializar com `isoformat()` (ex.: sufixo `-03:00`).
+- Fuso fixo `timezone(timedelta(hours=-3))`, sem `zoneinfo`/`tzdata`.
+  **Por quê:** a imagem Docker slim não garante banco de fusos, e `-03:00` fixo não depende dele.
 - `minutos = max(0, int((saida - entrada).total_seconds()) // 60)`.
 - **Por quê (truncar):** a suíte abre com `entrada` = agora − N min e encerra
   milissegundos depois; truncar devolve exatamente N, enquanto arredondar para cima daria N+1.
+
 ## D6. Cobrança e relatório (módulo `cobranca.py`)
 - Funções puras e inteiras: `calcular_minutos`, `calcular_valor_centavos`,
   `tempo_medio_arredondado`. Seguem a regra de cobrança do `spec.md`.
@@ -79,18 +86,47 @@ requirements.txt
 - Rotas: `POST /bilhetes`, `GET /bilhetes`, `GET /bilhetes/ativos`,
   `POST /bilhetes/{id}/encerramento`, `POST /bilhetes/{id}/cancelamento`,
   `GET /relatorios/diario`. Endpoints `def` síncronos, protegidos pelo lock (D3).
-## D10. Execução
-- Comando: `uvicorn app.main:app --host 0.0.0.0 --port 8003`.
-- Porta lida de `config.PORTA_SERVICO`; instruir também um bloco
-  `if __name__ == "__main__"` que sobe o servidor com essa porta.
-- Incluir `README` curto com instalar (`pip install -r requirements.txt`),
-  subir e testar (`pytest`).
+## D10. Execução em Docker
+- O agente cria `Dockerfile` e `.dockerignore` na raiz; Docker é a forma oficial de rodar.
+- **Por quê:** o mesmo ambiente roda em qualquer máquina, sem instalar Python
+  nem dependências no host; a correção só precisa do Docker.
+- Requisitos do `Dockerfile`:
+  - imagem base `python:3.11-slim`;
+  - `WORKDIR /app`; copiar `requirements.txt` e instalar com
+    `pip install --no-cache-dir -r requirements.txt` **antes** de copiar o código
+    (aproveita cache de camadas);
+  - copiar `app/` e `tests/` (os testes rodam no container);
+  - `ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1`;
+  - `EXPOSE 8003`;
+  - `CMD ["python", "-m", "app.main"]`, que sobe o Uvicorn em `0.0.0.0` e na
+    porta lida de `config.PORTA_SERVICO` (bloco `if __name__ == "__main__"` em `main.py`).
+- **Por quê (CMD via `app.main`):** a porta continua em uma única fonte
+  (`config.py`), sem repetir o literal no comando.
+- `0.0.0.0` é obrigatório: com `127.0.0.1` o serviço ficaria inacessível fora do container.
+- `.dockerignore`: `__pycache__`, `.pytest_cache`, `.venv`, `.git`.
+- Sem `docker-compose`: há um único serviço, sem banco; menos arquivos, menos falhas.
+- Sem volume: o estado é em memória e reinicia limpo a cada subida (D3).
+- `README.md` documenta os comandos:
+```bash
+docker build -t zona-azul .
+docker run --rm -p 8003:8003 zona-azul
+docker run --rm zona-azul python -m pytest
+```
+ 
+- Se o ambiente não tiver Docker, o `Dockerfile` continua sendo entregue e o
+  serviço também sobe localmente com `python -m app.main` (mesma porta).
+- `python -m pytest` (e não `pytest`) para que o diretório atual entre no
+  `sys.path` e `import app` funcione nos testes.
+
+
 ## D11. Estratégia de testes
 - pytest + `TestClient`, uma fixture que limpa o repositório e o contador de id a cada teste.
+- Rodar a suíte dentro do container: `docker run --rm zona-azul python -m pytest`.
 - Dois níveis: testes unitários de `cobranca.py` e testes de contrato HTTP por UC.
 - Tempo controlado pela fixture de relógio; nunca `sleep`.
 - Casos concretos vêm de `tests.md`; cada critério do `spec.md` tem ao menos um teste.
 - Os testes de contrato verificam o tipo inteiro dos campos em centavos.
+
 ## D12. Decisões em casos omissos
 - Corpo extra no encerramento e no cancelamento é ignorado.
 - Campos desconhecidos no body do `POST /bilhetes` são ignorados.
