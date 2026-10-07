@@ -118,9 +118,14 @@ Aplicada no encerramento, pela regra de cobrança. Valores esperados com a varia
 ## Requisitos não funcionais
 | # | Critério |
 | --- | --- |
-| N1 | Serviço escuta na porta 8003 e responde após a subida sem passos manuais |
+| N1 | Serviço escuta em `0.0.0.0:8003` dentro do container e responde após a subida sem passos manuais |
 | N2 | Todas as respostas são JSON, inclusive erros |
 | N3 | Nenhuma entrada inválida resulta em status 500 |
 | N4 | Nenhum erro altera o estado do sistema |
 | N5 | Nenhum campo `valor`, nem número com ponto decimal, em qualquer resposta |
+| N6 | Existe `Dockerfile` na raiz; `docker build -t zona-azul .` conclui sem erro |
+| N7 | `docker run --rm -p 8003:8003 zona-azul` sobe o serviço; `http://localhost:8003` atende as requisições do contrato |
+| N8 | `docker run --rm zona-azul python -m pytest` executa a suíte dentro do container e termina com código 0 |
+| N9 | Cada subida do container inicia com estado vazio (sem bilhetes, `id` começando em 1) |
+
  
