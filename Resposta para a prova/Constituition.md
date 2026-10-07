@@ -22,3 +22,28 @@ Regras operacionais:
 1. Definir constantes e derivados em **um único módulo de configuração**; nenhum outro arquivo repete esses valores como literais.
 2. O serviço escuta em `0.0.0.0:8003`. Base URL: `http://localhost:8003`.
 3. Toda resposta (sucesso ou erro) é `application/json`.
+
+## 3. Tempo
+Todo instante é ISO-8601 com fuso -03:00 (entradas em outro fuso são convertidas).
+Relógio injetável: uma única função agora(); nada mais lê o relógio do sistema.
+minutos é inteiro: duração em segundos truncada para minutos, mínimo 0.
+
+## 4. Erros
+Todo erro é JSON {"erro": "<codigo>"}, sem campos extras, e nunca altera estado.
+Usar apenas os códigos e status do enunciado; entrada inválida nunca gera 500.
+Todo endpoint documenta seus status de erro.
+
+## 5. Dados
+Placa: ^[A-Z0-9]{7}$, sem normalização.
+id inteiro sequencial a partir de 1, nunca reutilizado.
+Campos ausentes são omitidos, não null.
+Listagens: mais recentes primeiro (por entrada, desempate por id decrescente).
+
+## 6. Contrato
+O contrato do enunciado é a fonte de verdade; exemplos que o contradigam são ignorados.
+Nomes de campos exatamente como no contrato.
+Não criar endpoints, campos ou erros não especificados.
+
+## 7. Limites dos .md
+
+Especificar, não implementar: snippets com no máximo 20 linhas.
