@@ -16,7 +16,9 @@
 
 | # | URL | O que foi consultado | Onde aparece no entregável |
 | --- | --- | --- | --- |
-| — | https://share.gemini.google/M5BcOfq1nutK| modelagem e criação dos documentos em geral | Pode aparecer um pouco em todos os documentos |
+| — | https://share.gemini.google/M5BcOfq1nutK| duvidas e verificação | usado para tirar dúvidas e ajudar a formatar o documento |
+| — | https://claude.ai/share/2ae68bda-4d0d-420a-ae33-baa58c0ebca5| modelagem e criação dos documentos em geral | Pode aparecer em todos os documentos |
+
 
 *(Ex.: `https://docs.oracle.com/...` → sintaxe de `Optional` → `plan.md` na
 seção de decisões. Esse link é ILUSTRATIVO — fora de linha numerada não
