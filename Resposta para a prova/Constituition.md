@@ -2,7 +2,17 @@
 
 Convenções persistentes. Valem para toda tarefa e para todo arquivo gerado. Em caso de conflito entre este documento e qualquer exemplo, **vale o contrato do enunciado e este documento**. Só a API REST é escopo (sem back-office, sem UI).
 
-## 1. Parâmetros da variante
+## 1. Stack e execução
+1. Stack: Python 3.11+, FastAPI, Uvicorn e pytest.
+2. O projeto roda **dentro de Docker**. O `Dockerfile` (na raiz) faz parte da
+   entrega e deve ser criado pelo agente; o serviço sobe com `docker build` +
+   `docker run`, sem nenhum passo manual fora do container.
+3. Dentro do container o serviço escuta em `0.0.0.0` na `PORTA_SERVICO`,
+   publicada na mesma porta do host.
+4. Os testes (pytest) também rodam dentro do container.
+
+
+## 2. Parâmetros da variante
 
 |Constante|Valor|
 |---|---|
