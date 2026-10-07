@@ -2,7 +2,7 @@
 
 Convenções persistentes. Valem para toda tarefa e para todo arquivo gerado. Em caso de conflito entre este documento e qualquer exemplo, **vale o contrato do enunciado e este documento**. Só a API REST é escopo (sem back-office, sem UI).
 
-## 1. Parâmetros da variante (constantes nomeadas, nunca números mágicos)
+## 1. Parâmetros da variante
 
 |Constante|Valor|
 |---|---|
