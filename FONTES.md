@@ -16,8 +16,8 @@
 
 | # | URL | O que foi consultado | Onde aparece no entregável |
 | --- | --- | --- | --- |
-| — | https://share.gemini.google/M5BcOfq1nutK| duvidas e verificação | usado para tirar dúvidas e ajudar a formatar o documento |
-| — | https://claude.ai/share/2ae68bda-4d0d-420a-ae33-baa58c0ebca5| modelagem e criação dos documentos em geral | Pode aparecer em todos os documentos |
+| — | | |
+
 
 
 *(Ex.: `https://docs.oracle.com/...` → sintaxe de `Optional` → `plan.md` na
@@ -40,7 +40,8 @@ conta. Se nenhum site foi consultado, escreva: **"Nenhum site consultado."**)*
 
 | # | Link público da conversa | Onde o conteúdo foi usado |
 | --- | --- | --- |
-| — | | |
+| — | https://share.gemini.google/M5BcOfq1nutK| duvidas e verificação | usado para tirar dúvidas e ajudar a formatar o documento |
+| — | https://claude.ai/share/2ae68bda-4d0d-420a-ae33-baa58c0ebca5| modelagem e criação dos documentos em geral | Pode aparecer em todos os documentos |
 
 *(Se nenhuma IA foi utilizada, escreva: **"Nenhuma IA utilizada."**)*
 
